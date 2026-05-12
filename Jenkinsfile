@@ -10,7 +10,7 @@ pipeline {
 
         IMAGE_TAG = "v1.${BUILD_NUMBER}"
 
-        DEPLOY_HOST = "ubuntu@52.66.246.75"
+        DEPLOY_HOST = "ubuntu@52.66.252.20"
     }
 
     stages {
