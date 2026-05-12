@@ -61,24 +61,28 @@ pipeline {
 
                 sshagent(['ec2-ssh-key']) {
 
-                    sh '''
+                    shstage('Deploy') {
 
-                    ssh -o StrictHostKeyChecking=no $DEPLOY_HOST << EOF
+    steps {
 
-                    docker pull $DOCKER_USER/$IMAGE_NAME:$IMAGE_TAG
+        sshagent(['ec2-ssh-key']) {
 
-                    docker stop node-app || true
+            sh '''
+            ssh -o StrictHostKeyChecking=no $DEPLOY_HOST << EOF
 
-                    docker rm node-app || true
+            docker pull $DOCKER_USER/$IMAGE_NAME:$IMAGE_TAG
 
-                    docker run -d \
-                    --name node-app \
-                    -p 3000:3000 \
-                    $DOCKER_USER/$IMAGE_NAME:$IMAGE_TAG
+            docker stop node-app || true
 
-                    EOF
+            docker rm node-app || true
 
-                    '''
+            docker run -d \
+            --name node-app \
+            -p 3000:3000 \
+            $DOCKER_USER/$IMAGE_NAME:$IMAGE_TAG
+
+            EOF
+            '''
                 }
             }
         }
