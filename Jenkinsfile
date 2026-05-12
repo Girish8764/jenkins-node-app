@@ -19,8 +19,8 @@ pipeline {
 
             steps {
 
-                git 'https://github.com/Girish8764/jenkins-node-app.git'
-
+               git branch: 'main',
+               url: 'https://github.com/Girish8764/jenkins-node-app.git'
             }
         }
 
