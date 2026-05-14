@@ -4,13 +4,13 @@ pipeline {
 
     environment {
 
-        DOCKER_USER = "girish8764"
+        DOCKER_USER = "YOUR_DOCKERHUB_USERNAME"
 
         IMAGE_NAME = "node-app"
 
         IMAGE_TAG = "v1.${BUILD_NUMBER}"
 
-        DEPLOY_HOST = "ubuntu@43.204.111.234"
+        DEPLOY_HOST = "ubuntu@YOUR_DEPLOY_SERVER_IP"
     }
 
     stages {
@@ -19,8 +19,9 @@ pipeline {
 
             steps {
 
-               git branch: 'main',
-               url: 'https://github.com/Girish8764/jenkins-node-app.git'
+                git branch: 'main',
+                url: 'https://github.com/Girish8764/jenkins-node-app.git'
+
             }
         }
 
@@ -61,31 +62,24 @@ pipeline {
 
                 sshagent(['ec2-ssh-key']) {
 
-                    shstage('Deploy') {
+                    sh """
+ssh -o StrictHostKeyChecking=no $DEPLOY_HOST << EOF
 
-    steps {
+docker pull $DOCKER_USER/$IMAGE_NAME:$IMAGE_TAG
 
-        sshagent(['ec2-ssh-key']) {
+docker stop node-app || true
 
-            sh '''
-            ssh -o StrictHostKeyChecking=no $DEPLOY_HOST << EOF
+docker rm node-app || true
 
-            docker pull $DOCKER_USER/$IMAGE_NAME:$IMAGE_TAG
+docker run -d \
+--name node-app \
+-p 3000:3000 \
+$DOCKER_USER/$IMAGE_NAME:$IMAGE_TAG
 
-            docker stop node-app || true
-
-            docker rm node-app || true
-
-            docker run -d \
-            --name node-app \
-            -p 3000:3000 \
-            $DOCKER_USER/$IMAGE_NAME:$IMAGE_TAG
-
-            EOF
-            '''
+EOF
+"""
                 }
             }
         }
     }
-}
 }
