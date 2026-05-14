@@ -4,13 +4,13 @@ pipeline {
 
     environment {
 
-        DOCKER_USER = "YOUR_DOCKERHUB_USERNAME"
+        DOCKER_USER = "girish8764"
 
         IMAGE_NAME = "node-app"
 
         IMAGE_TAG = "v1.${BUILD_NUMBER}"
 
-        DEPLOY_HOST = "ubuntu@YOUR_DEPLOY_SERVER_IP"
+        DEPLOY_HOST = "ubuntu@43.204.111.234"
     }
 
     stages {
